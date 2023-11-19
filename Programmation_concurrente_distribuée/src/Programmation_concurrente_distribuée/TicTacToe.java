@@ -198,8 +198,10 @@ public class TicTacToe implements ActionListener{
 	  }
 	 textfield.setText("DRAAAW !");
  }
+ 
 
  public static void main(String[] args) {
+	@SuppressWarnings("unused")
 	TicTacToe tictactoe = new TicTacToe();
  }
  
