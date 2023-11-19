@@ -96,16 +96,16 @@ public class TicTacToe implements ActionListener{
  
  @Override
  public void actionPerformed(ActionEvent e) {
-	 if (!isMyTurn) {
-	        return; 
-	   }
+     if (!isMyTurn) {
+         return; // Not this player's turn
+     }
      for (int i = 0; i < 9; i++) {
          if (e.getSource() == buttons[i]) {
              if (buttons[i].getText().equals("")) {
                  buttons[i].setForeground(player1_turn ? new Color(255,0,0) : new Color(0,0,255));
                  buttons[i].setText(player1_turn ? "X" : "O");
                  isMyTurn = false; 
-                 sendMove(i);
+                 textfield.setText(player1_turn ? "O turn" : "X turn"); 
                  check();
              }
          }
@@ -122,13 +122,12 @@ public class TicTacToe implements ActionListener{
 	}
 	
 	if(random.nextInt(2)==0) {
-	    player1_turn=true;
-	    textfield.setText("X turn");
-	}
-	else {
-	    player1_turn=false;
-	    textfield.setText("O turn");
-	}
+        player1_turn = true;
+        textfield.setText("X turn"); 
+    } else {
+        player1_turn = false;
+        textfield.setText("O turn");
+    }
  }
  
  public void check() {
@@ -298,10 +297,9 @@ public class TicTacToe implements ActionListener{
 	                    int position = Integer.parseInt(message.substring(5));
 	                    SwingUtilities.invokeLater(() -> {
 	                        if (buttons[position].getText().equals("")) {
-	                            buttons[position].setText(!player1_turn ? "X" : "O");
-	                            check();
-	                            player1_turn = !player1_turn; 
+	                            buttons[position].setText(player1_turn ? "O" : "X"); 
 	                            isMyTurn = true; 
+	                            textfield.setText(player1_turn ? "X turn" : "O turn"); 
 	                        }
 	                    });
 	                }
