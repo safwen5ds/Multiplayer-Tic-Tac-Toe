@@ -297,9 +297,11 @@ public class TicTacToe implements ActionListener{
 	                    int position = Integer.parseInt(message.substring(5));
 	                    SwingUtilities.invokeLater(() -> {
 	                        if (buttons[position].getText().equals("")) {
-	                            buttons[position].setText(player1_turn ? "O" : "X"); 
+	                            buttons[position].setText(player1_turn ? "O" : "X");
+	                            player1_turn = !player1_turn; 
 	                            isMyTurn = true; 
 	                            textfield.setText(player1_turn ? "X turn" : "O turn"); 
+	                            check();
 	                        }
 	                    });
 	                }
@@ -310,6 +312,7 @@ public class TicTacToe implements ActionListener{
 	        }
 	    }
 	}
+
 
 
 
