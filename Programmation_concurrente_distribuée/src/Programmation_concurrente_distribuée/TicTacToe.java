@@ -298,10 +298,11 @@ public class TicTacToe implements ActionListener{
 	                    SwingUtilities.invokeLater(() -> {
 	                        if (buttons[position].getText().equals("")) {
 	                            buttons[position].setText(player1_turn ? "O" : "X");
-	                            player1_turn = !player1_turn; 
-	                            isMyTurn = true; 
-	                            textfield.setText(player1_turn ? "X turn" : "O turn"); 
 	                            check();
+	                            // Toggle the isMyTurn flag after the move has been made
+	                            isMyTurn = true;
+	                            // Update the turn indicator based on the player's mark
+	                            textfield.setText(player1_turn ? "O turn" : "X turn");
 	                        }
 	                    });
 	                }
@@ -312,6 +313,7 @@ public class TicTacToe implements ActionListener{
 	        }
 	    }
 	}
+
 
 
 
