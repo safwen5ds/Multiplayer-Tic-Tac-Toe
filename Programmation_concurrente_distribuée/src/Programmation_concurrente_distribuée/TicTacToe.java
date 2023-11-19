@@ -90,21 +90,22 @@ public class TicTacToe implements ActionListener{
 	}
 
 	
-	firstTurn();
+
  }
  
  
  @Override
  public void actionPerformed(ActionEvent e) {
      if (!isMyTurn) {
-         return; // Not this player's turn
+         return;
      }
      for (int i = 0; i < 9; i++) {
          if (e.getSource() == buttons[i]) {
              if (buttons[i].getText().equals("")) {
                  buttons[i].setForeground(player1_turn ? new Color(255,0,0) : new Color(0,0,255));
                  buttons[i].setText(player1_turn ? "X" : "O");
-                 isMyTurn = false; 
+                 sendMove(i); 
+                 isMyTurn = false;
                  textfield.setText(player1_turn ? "O turn" : "X turn"); 
                  check();
              }
@@ -113,22 +114,7 @@ public class TicTacToe implements ActionListener{
  }
 
  
- public void firstTurn() {
-	try {
-	    Thread.sleep(2000);
-	} catch (InterruptedException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-	
-	if(random.nextInt(2)==0) {
-        player1_turn = true;
-        textfield.setText("X turn"); 
-    } else {
-        player1_turn = false;
-        textfield.setText("O turn");
-    }
- }
+
  
  public void check() {
 
@@ -294,15 +280,15 @@ public class TicTacToe implements ActionListener{
 	            try {
 	                String message = dis.readUTF();
 	                if (message.startsWith("MOVE:")) {
-	                    int position = Integer.parseInt(message.substring(5));
+	                    String[] parts = message.split(":");
+	                    int position = Integer.parseInt(parts[1]);
+	                    String symbol = parts[2]; // "X" or "O"
 	                    SwingUtilities.invokeLater(() -> {
 	                        if (buttons[position].getText().equals("")) {
-	                            buttons[position].setText(player1_turn ? "O" : "X");
+	                            buttons[position].setText(symbol);
 	                            check();
-	                            // Toggle the isMyTurn flag after the move has been made
-	                            isMyTurn = true;
-	                            // Update the turn indicator based on the player's mark
-	                            textfield.setText(player1_turn ? "O turn" : "X turn");
+	                            isMyTurn = true; 
+	                            textfield.setText(symbol.equals("X") ? "O turn" : "X turn");
 	                        }
 	                    });
 	                }
@@ -320,14 +306,15 @@ public class TicTacToe implements ActionListener{
 
 
 
-
- private void sendMove(int buttonIndex) {
+ private void sendMove(int move) {
 	    try {
-	        dos.writeUTF("MOVE:" + buttonIndex);
+	        dos.writeUTF("MOVE:" + move + ":" + (player1_turn ? "X" : "O"));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
 	}
+
+
 
 
  private boolean shouldStartServer() {
