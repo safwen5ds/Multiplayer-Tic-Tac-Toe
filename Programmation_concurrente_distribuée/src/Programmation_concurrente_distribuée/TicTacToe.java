@@ -13,109 +13,101 @@ import java.util.*;
 import javax.swing.*;
 
 public class TicTacToe implements ActionListener{
- private Random random = new Random();
- private JFrame frame = new JFrame();
- private JPanel title_panel = new JPanel();
- private JPanel button_panel = new JPanel();
- private JLabel textfield = new JLabel();
- private JButton[] buttons = new JButton[9];
- private boolean player1_turn;
- @SuppressWarnings("unused")
- private String ip ="localhost";
- private int port =22222;
- private Scanner sc = new Scanner(System.in);
- private Socket socket;
- private DataOutputStream dos;
- private DataInputStream dis;
- private ServerSocket serverSocket;
- private boolean accepted = false;
- private boolean unableToCommunicateWithOpponent = false;
- private boolean isMyTurn;
+	private JFrame frame = new JFrame();
+    private JPanel title_panel = new JPanel();
+    private JPanel button_panel = new JPanel();
+    private JLabel textfield = new JLabel();
+    private JButton[] buttons = new JButton[9];
+    private boolean player1_turn;
+    private Socket socket;
+    private DataOutputStream dos;
+    private DataInputStream dis;
+    private ServerSocket serverSocket;
+    private boolean isMyTurn;
+    private boolean isServer;
  
+    TicTacToe() {
+        String ip = JOptionPane.showInputDialog(frame, "Enter IP Address:", "localhost");
+        int port = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter Port:", "22222"));
+        while (port < 1 || port > 65535) {
+            port = Integer.parseInt(JOptionPane.showInputDialog(frame, "Invalid port. Enter Port:", "22222"));
+        }
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 800);
+        frame.getContentPane().setBackground(new Color(50, 50, 50));
+        frame.setLayout(new BorderLayout());
+        frame.setVisible(true);
+
+        textfield.setBackground(new Color(25, 25, 25));
+        textfield.setForeground(new Color(25, 255, 0));
+        textfield.setFont(new Font("Ink Free", Font.BOLD, 75));
+        textfield.setHorizontalAlignment(JLabel.CENTER);
+        textfield.setText("Tic-Tac-Toe");
+        textfield.setOpaque(true);
+
+        title_panel.setLayout(new BorderLayout());
+        title_panel.setBounds(0, 0, 800, 100);
+
+        button_panel.setLayout(new GridLayout(3, 3));
+        button_panel.setBackground(new Color(150, 150, 150));
+
+        for (int i = 0; i < 9; i++) {
+            buttons[i] = new JButton();
+            button_panel.add(buttons[i]);
+            buttons[i].setFont(new Font("MV Boli", Font.BOLD, 120));
+            buttons[i].setFocusable(false);
+            buttons[i].addActionListener(this);
+        }
+
+        title_panel.add(textfield);
+        frame.add(title_panel, BorderLayout.NORTH);
+        frame.add(button_panel);
+
+        if (shouldStartServer()) {
+            initializeServer(port);
+            player1_turn = true;
+            isMyTurn = true;
+            isServer = true; 
+        } else {
+            if (!connectToServer(ip, port)) {
+                System.out.println("Failed to connect to the server.");
+                return;
+            }
+            player1_turn = false;
+            isMyTurn = false;
+            isServer = false; 
+        }
+        updateTextfield();
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (!isMyTurn) {
+            return;
+        }
+        for (int i = 0; i < 9; i++) {
+            if (e.getSource() == buttons[i] && buttons[i].getText().equals("")) {
+                buttons[i].setForeground(isServer ? Color.RED : Color.BLUE);
+                buttons[i].setText(isServer ? "X" : "O"); 
+                sendMove(i);
+                isMyTurn = false;
+                player1_turn = !player1_turn;
+                updateTextfield();
+                check();
+                break;
+            }
+        }
+    }
+
+    private void updateTextfield() {
+        if (isMyTurn) {
+            textfield.setText(isServer ? "Your turn (X)" : "Your turn (O)");
+        } else {
+            textfield.setText(isServer ? "Opponent's turn (O)" : "Opponent's turn (X)");
+        }
+    }
 
 
-
-	
- 
- 
- TicTacToe(){
-	System.out.println("Please input the IP: ");
-	ip = sc.nextLine();
-	System.out.println("Please input the port: ");
-	port = sc.nextInt();
-	while (port < 1 || port > 65535 )
-	{
-		System.out.println("The port you entered was invalid, please input another port: ");
-		port = sc.nextInt();
-	}
-
-	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	frame.setSize(800,800);
-	frame.getContentPane().setBackground(new Color(50,50,50));
-	frame.setLayout(new BorderLayout());frame.setVisible(true);
-	textfield.setBackground(new Color(25,25,25));
-	textfield.setForeground(new Color(25,255,0));
-	textfield.setFont(new Font("Ink Free",Font.BOLD,75));
-	textfield.setHorizontalAlignment(JLabel.CENTER);
-	textfield.setText("Tic-Tac-Toe");
-	textfield.setOpaque(true);
-	
-	title_panel.setLayout(new BorderLayout());
-	title_panel.setBounds(0,0,800,100);
-	
-	button_panel.setLayout(new GridLayout(3,3));
-	button_panel.setBackground(new Color(150,150,150));
-	
-	for(int i=0;i<9;i++) {
-	    buttons[i] = new JButton();
-	    button_panel.add(buttons[i]);
-	    buttons[i].setFont(new Font("MV Boli",Font.BOLD,120));
-	    buttons[i].setFocusable(false);
-	    buttons[i].addActionListener(this);
-	}
-	
-	title_panel.add(textfield);
-	frame.add(title_panel,BorderLayout.NORTH);
-	frame.add(button_panel);
-	if (shouldStartServer()) {
-	    initializeServer();
-	    player1_turn = true; 
-	    isMyTurn = true; 
-	} else {
-	    if (!connectToServer()) {
-	        System.out.println("Failed to connect to the server.");
-	    }
-	    player1_turn = false; 
-	    isMyTurn = false; 
-	}
-
-	
-
- }
- 
- 
- @Override
- public void actionPerformed(ActionEvent e) {
-     if (!isMyTurn) {
-         return;
-     }
-     for (int i = 0; i < 9; i++) {
-         if (e.getSource() == buttons[i]) {
-             if (buttons[i].getText().equals("")) {
-                 buttons[i].setForeground(player1_turn ? new Color(255,0,0) : new Color(0,0,255));
-                 buttons[i].setText(player1_turn ? "X" : "O");
-                 sendMove(i); 
-                 isMyTurn = false;
-                 textfield.setText(player1_turn ? "O turn" : "X turn"); 
-                 check();
-             }
-         }
-     }
- }
-
- 
-
- 
  public void check() {
 
 		if((buttons[0].getText()=="X") &&
@@ -245,35 +237,35 @@ public class TicTacToe implements ActionListener{
 	    return true;
 	}
 
- private void initializeServer() {
-	    try {
-	        serverSocket = new ServerSocket(port);
-	        System.out.println("Server started. Waiting for a client ...");
-	        socket = serverSocket.accept();
-	        setupStreams();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	}
- public boolean connectToServer() {
-	    try {
-	        socket = new Socket(ip, port);
-	        setupStreams();
-	        return true;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return false;
-	    }
-	}
+ private void initializeServer(int port) {
+     try {
+         serverSocket = new ServerSocket(port);
+         System.out.println("Server started. Waiting for a client ...");
+         socket = serverSocket.accept();
+         setupStreams();
+     } catch (IOException e) {
+         e.printStackTrace();
+     }
+ }
+ private boolean connectToServer(String ip, int port) {
+     try {
+         socket = new Socket(ip, port);
+         setupStreams();
+         return true;
+     } catch (Exception e) {
+         e.printStackTrace();
+         return false;
+     }
+ }
  private void setupStreams() {
-	    try {
-	        dos = new DataOutputStream(socket.getOutputStream());
-	        dis = new DataInputStream(socket.getInputStream());
-	        new Thread(new Listener()).start();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	}
+     try {
+         dos = new DataOutputStream(socket.getOutputStream());
+         dis = new DataInputStream(socket.getInputStream());
+         new Thread(new Listener()).start();
+     } catch (IOException e) {
+         e.printStackTrace();
+     }
+ }
  private class Listener implements Runnable {
 	    public void run() {
 	        while (true) {
@@ -282,13 +274,13 @@ public class TicTacToe implements ActionListener{
 	                if (message.startsWith("MOVE:")) {
 	                    String[] parts = message.split(":");
 	                    int position = Integer.parseInt(parts[1]);
-	                    String symbol = parts[2]; // "X" or "O"
 	                    SwingUtilities.invokeLater(() -> {
 	                        if (buttons[position].getText().equals("")) {
-	                            buttons[position].setText(symbol);
+	                            buttons[position].setText(isServer ? "O" : "X"); 
+	                            player1_turn = !player1_turn;
+	                            isMyTurn = true;
+	                            updateTextfield();
 	                            check();
-	                            isMyTurn = true; 
-	                            textfield.setText(symbol.equals("X") ? "O turn" : "X turn");
 	                        }
 	                    });
 	                }
@@ -301,14 +293,9 @@ public class TicTacToe implements ActionListener{
 	}
 
 
-
-
-
-
-
  private void sendMove(int move) {
 	    try {
-	        dos.writeUTF("MOVE:" + move + ":" + (player1_turn ? "X" : "O"));
+	        dos.writeUTF("MOVE:" + move + ":" + (isServer ? "X" : "O")); 
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
@@ -318,9 +305,9 @@ public class TicTacToe implements ActionListener{
 
 
  private boolean shouldStartServer() {
-	    int response = JOptionPane.showConfirmDialog(null, "Do you want to start the server?", "Server or Client", JOptionPane.YES_NO_OPTION);
-	    return response == JOptionPane.YES_OPTION;
-	}
+     int response = JOptionPane.showConfirmDialog(null, "Do you want to start the server?", "Server or Client", JOptionPane.YES_NO_OPTION);
+     return response == JOptionPane.YES_OPTION;
+ }
 
 
 
