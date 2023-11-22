@@ -27,6 +27,7 @@ public class TicTacToe implements ActionListener{
     private ServerSocket serverSocket;
     private boolean isMyTurn;
     private boolean isServer;
+    private JButton replayButton = new JButton("Replay");
  
     TicTacToe() {
         String ip = JOptionPane.showInputDialog(frame, "Enter IP Address:", "localhost");
@@ -65,6 +66,11 @@ public class TicTacToe implements ActionListener{
         title_panel.add(textfield);
         frame.add(title_panel, BorderLayout.NORTH);
         frame.add(button_panel);
+        replayButton.setFont(new Font("Ink Free", Font.BOLD, 30));
+        replayButton.setBackground(Color.BLACK);
+        replayButton.setForeground(Color.WHITE);
+        replayButton.addActionListener(e -> resetGame());
+        title_panel.add(replayButton, BorderLayout.SOUTH);
 
         if (shouldStartServer()) {
             initializeServer(port);
@@ -109,7 +115,16 @@ public class TicTacToe implements ActionListener{
         }
     }
 
-
+    private void resetGame() {
+        for (JButton button : buttons) {
+            button.setText("");
+            button.setEnabled(true);
+            button.setBackground(new JButton().getBackground());
+        }
+        player1_turn = true; 
+        isMyTurn = isServer; 
+        updateTextfield();
+    }
  public void check() {
 
 		if((buttons[0].getText()=="X") &&
