@@ -254,6 +254,20 @@ public class TicTacToe implements ActionListener{
 	    return true;
 	}
 
+ private boolean shouldStartServer() {
+     int response = JOptionPane.showConfirmDialog(null, "Do you want to start the server?", "Server or Client", JOptionPane.YES_NO_OPTION);
+     return response == JOptionPane.YES_OPTION;
+ }
+ 
+ private void setupStreams() {
+     try {
+         oos = new ObjectOutputStream(socket.getOutputStream());
+         ois = new ObjectInputStream(socket.getInputStream());
+         new Thread(new Listener()).start();
+     } catch (IOException e) {
+         e.printStackTrace();
+     }
+ }
  private void initializeServer(int port) {
      try {
          serverSocket = new ServerSocket(port);
@@ -274,11 +288,10 @@ public class TicTacToe implements ActionListener{
          return false;
      }
  }
- private void setupStreams() {
+ 
+ private void sendMove(int move) {
      try {
-         oos = new ObjectOutputStream(socket.getOutputStream());
-         ois = new ObjectInputStream(socket.getInputStream());
-         new Thread(new Listener()).start();
+         oos.writeObject("MOVE:" + move + ":" + (isServer ? "X" : "O"));
      } catch (IOException e) {
          e.printStackTrace();
      }
@@ -308,24 +321,6 @@ public class TicTacToe implements ActionListener{
 	        }
 	    }
 	}
-
-
- private void sendMove(int move) {
-     try {
-         oos.writeObject("MOVE:" + move + ":" + (isServer ? "X" : "O"));
-     } catch (IOException e) {
-         e.printStackTrace();
-     }
- }
-
-
-
-
- private boolean shouldStartServer() {
-     int response = JOptionPane.showConfirmDialog(null, "Do you want to start the server?", "Server or Client", JOptionPane.YES_NO_OPTION);
-     return response == JOptionPane.YES_OPTION;
- }
-
 
 
  public static void main(String[] args) {
