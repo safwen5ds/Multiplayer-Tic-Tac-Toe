@@ -6,6 +6,8 @@ import java.awt.event.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -20,8 +22,8 @@ public class TicTacToe implements ActionListener{
     private JButton[] buttons = new JButton[9];
     private boolean player1_turn;
     private Socket socket;
-    private DataOutputStream dos;
-    private DataInputStream dis;
+    private ObjectOutputStream oos;
+    private ObjectInputStream ois;
     private ServerSocket serverSocket;
     private boolean isMyTurn;
     private boolean isServer;
@@ -259,18 +261,18 @@ public class TicTacToe implements ActionListener{
  }
  private void setupStreams() {
      try {
-         dos = new DataOutputStream(socket.getOutputStream());
-         dis = new DataInputStream(socket.getInputStream());
+         oos = new ObjectOutputStream(socket.getOutputStream());
+         ois = new ObjectInputStream(socket.getInputStream());
          new Thread(new Listener()).start();
      } catch (IOException e) {
          e.printStackTrace();
      }
  }
  private class Listener implements Runnable {
-	    public void run() {
-	        while (true) {
-	            try {
-	                String message = dis.readUTF();
+	 public void run() {
+         while (true) {
+             try {
+                 String message = (String) ois.readObject();
 	                if (message.startsWith("MOVE:")) {
 	                    String[] parts = message.split(":");
 	                    int position = Integer.parseInt(parts[1]);
@@ -284,7 +286,7 @@ public class TicTacToe implements ActionListener{
 	                        }
 	                    });
 	                }
-	            } catch (IOException e) {
+	            } catch (IOException | ClassNotFoundException e) {
 	                e.printStackTrace();
 	                break;
 	            }
@@ -294,12 +296,12 @@ public class TicTacToe implements ActionListener{
 
 
  private void sendMove(int move) {
-	    try {
-	        dos.writeUTF("MOVE:" + move + ":" + (isServer ? "X" : "O")); 
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	}
+     try {
+         oos.writeObject("MOVE:" + move + ":" + (isServer ? "X" : "O"));
+     } catch (IOException e) {
+         e.printStackTrace();
+     }
+ }
 
 
 
