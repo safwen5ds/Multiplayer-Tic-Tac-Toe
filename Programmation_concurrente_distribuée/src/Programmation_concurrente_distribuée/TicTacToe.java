@@ -29,6 +29,14 @@ public class TicTacToe implements ActionListener{
     private JButton replayButton = new JButton("Replay");
  
     TicTacToe() {
+    	 frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+         frame.addWindowListener(new WindowAdapter() {
+             @Override
+             public void windowClosing(WindowEvent e) {
+                 closeFirewallPort();
+                 System.exit(0);
+             }
+         });
         String ip = JOptionPane.showInputDialog(frame, "Enter IP Address:", "localhost");
         int port = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter Port:", "22222"));
         while (port < 1 || port > 65535) {
@@ -72,6 +80,7 @@ public class TicTacToe implements ActionListener{
         title_panel.add(replayButton, BorderLayout.SOUTH);
 
         if (shouldStartServer()) {
+        	openFirewallPort();
             initializeServer(port);
             player1_turn = true;
             isMyTurn = true;
@@ -86,6 +95,30 @@ public class TicTacToe implements ActionListener{
             isServer = false; 
         }
         updateTextfield();
+    }
+    
+    private void openFirewallPort() {
+        String command = "netsh advfirewall firewall add rule name=\"TicTacToePort\" dir=in action=allow protocol=TCP localport=22222";
+        executeCommand(command, "Firewall port 22222 opened successfully.", "Failed to open port on firewall.");
+    }
+
+    private void closeFirewallPort() {
+        String command = "netsh advfirewall firewall delete rule name=\"TicTacToePort\" protocol=TCP localport=22222";
+        executeCommand(command, "Firewall port 22222 closed successfully.", "Failed to close port on firewall.");
+    }
+
+    private void executeCommand(String command, String successMessage, String errorMessage) {
+        try {
+            Process process = Runtime.getRuntime().exec(command);
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println(successMessage);
+            } else {
+                System.out.println(errorMessage + " Exit code: " + exitCode);
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
