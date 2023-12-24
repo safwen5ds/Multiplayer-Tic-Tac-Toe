@@ -56,15 +56,15 @@ public class MainMenu extends JFrame {
 		newGame.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        new TicTacToe(MainMenu.this); // Pass the current MainMenu instance
-		        MainMenu.this.setVisible(false); // Hide the MainMenu
+		        new TicTacToe(MainMenu.this); 
+		        MainMenu.this.setVisible(false); 
 		    }
 		});
 
-		//Size for the box.If you have any problem you can change it.
+
 		left.setPreferredSize(new Dimension(350, 350));
 
-		//Panel that contains the buttons
+
 		TranslucentPanel secondPanel = new TranslucentPanel();
 		secondPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		secondPanel.setPreferredSize(new Dimension(330, 380));
@@ -113,15 +113,13 @@ public class MainMenu extends JFrame {
 
 	    //If you want to have a background music add the path of it here and uncomment it
 	    
-/*
 		//Necessary variables for the audios
 	    AudioInputStream stream;
 	    AudioFormat format;
 	    DataLine.Info info;
 	    Clip clip;
 		
-	    File background_music = new File(
-				" Add here your path if you want");
+	    File background_music = new File("/Images/videoplayback.mp3");
 	    
 	    stream = AudioSystem.getAudioInputStream(background_music);
 	    format = stream.getFormat();
@@ -129,8 +127,7 @@ public class MainMenu extends JFrame {
 	    clip = (Clip) AudioSystem.getLine(info);
 	    clip.open(stream);
 	    
-	    //---- Uncomment the followiung line to start playing the background music
-	   clip.start(); */
+	   clip.start(); 
 		
 		MouseAdapter ml = new MouseAdapter() {
 
