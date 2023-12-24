@@ -308,11 +308,28 @@ public void xWins(int a, int b, int c, int d) {
   textfield.setText("X wins");
 
   if (tcp.isServer()) { // Server is X
-      player1Points += 1500;
-      player2Points += 0;
+	  if (currentMatch!=doublePointsMatch)
+	  {
+		  player1Points += 1500;
+	      player2Points += 0;
+	  }else
+	  {
+		  player1Points += 3000;
+	      player2Points += 0;
+	  }
+		  
+      
   } else {
-      player1Points += 0;
-      player2Points += 1500;
+	  if (currentMatch!=doublePointsMatch)
+	  {
+		  player1Points += 0;
+	      player2Points += 1500;
+	  }else
+	  {
+		  player1Points += 0;
+	      player2Points += 3000;
+	  }
+     
   }
 
   updatePointsDisplay();
@@ -325,11 +342,27 @@ public void oWins(int a, int b, int c, int d) {
   textfield.setText("O wins");
 
   if (tcp.isServer()) { // Server is O
-      player1Points += 0;
-      player2Points += 1500;
+	  if (currentMatch!=doublePointsMatch)
+	  {
+		  player1Points += 0;
+	      player2Points += 1500;
+	  }else
+	  {
+		  player1Points += 0;
+	      player2Points += 3000;
+	  }
+      
   } else {
-      player1Points += 1500;
-      player2Points += 0;
+	  if (currentMatch!=doublePointsMatch)
+	  {
+		  player1Points += 1500;
+	      player2Points += 0;
+	  }else
+	  {
+		  player1Points += 3000;
+	      player2Points += 0;
+	  }
+      
   }
 
   updatePointsDisplay();
@@ -345,8 +378,16 @@ public void draw() {
   }
   textfield.setText("Draw!");
 
-  player1Points += 500;
-  player2Points += 500;
+  if (currentMatch!=doublePointsMatch)
+  {
+	  player1Points += 500;
+	  player2Points += 500;
+  }else
+  {
+	  player1Points += 1000;
+	  player2Points += 1000;
+  }
+
 
   updatePointsDisplay();
   currentMatch++;
