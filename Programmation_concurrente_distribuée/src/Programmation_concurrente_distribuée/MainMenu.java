@@ -121,7 +121,7 @@ public class MainMenu extends JFrame {
 	    DataLine.Info info;
 	    Clip clip;
 		
-	    File background_music = new File(getClass().getResource("/Images/videoplayback.mp3").toURI());
+	    File background_music = new File(getClass().getResource("/Images/videoplayback.wav").toURI());
 	    
 	    stream = AudioSystem.getAudioInputStream(background_music);
 	    format = stream.getFormat();
