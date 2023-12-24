@@ -555,7 +555,7 @@ private void updatePointsDisplay() {
     pointsFrame.repaint();
     if (currentMatch == doublePointsMatch)
     {
-    	JOptionPane.showMessageDialog(frame, "IT is double Points match !!");
+    	JOptionPane.showMessageDialog(frame, "It Is A Double Points Match !!");
     }
 }
 
