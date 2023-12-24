@@ -553,6 +553,10 @@ public void declareWinner() {
 private void updatePointsDisplay() {
     pointsLabel.setText("Player 1 Points: " + player1Points + ", Player 2 Points: " + player2Points);
     pointsFrame.repaint();
+    if (currentMatch == doublePointsMatch)
+    {
+    	JOptionPane.showMessageDialog(frame, "IT is double Points match !!");
+    }
 }
 
 }
