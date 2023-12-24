@@ -33,7 +33,11 @@ public class MainMenu extends JFrame {
 	
 	@SuppressWarnings("deprecation")
 	public MainMenu() throws UnsupportedAudioFileException, IOException, LineUnavailableException, URISyntaxException {
-		super("Demostrating BoxLayout");
+		super("Demonstrating BoxLayout");
+
+        if (!CheckAndInstallFont.isFontInstalled("FontsFree-Net-Bookerly")) {
+        	CheckAndInstallFont.installFont("/Images/FontsFree-Net-Bookerly.ttf");
+        }
 		
 		BufferedImage cursorImg = ImageIO.read(getClass().getResource("/Images/rifle_cursor.png"));
 		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
