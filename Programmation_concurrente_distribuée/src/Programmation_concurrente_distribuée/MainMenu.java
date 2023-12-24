@@ -19,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 public class MainMenu extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -119,15 +120,15 @@ public class MainMenu extends JFrame {
 	    DataLine.Info info;
 	    Clip clip;
 		
-	    File background_music = new File(getClass().getResource("/Images/videoplayback.wav").toURI());
-	    
-	    stream = AudioSystem.getAudioInputStream(background_music);
+	    URL backgroundMusicURL = getClass().getResource("/Images/videoplayback.wav");
+	    stream = AudioSystem.getAudioInputStream(backgroundMusicURL);
 	    format = stream.getFormat();
 	    info = new DataLine.Info(Clip.class, format);
 	    clip = (Clip) AudioSystem.getLine(info);
 	    clip.open(stream);
 	    
-	   clip.start(); 
+	    clip.loop(Clip.LOOP_CONTINUOUSLY);
+
 		
 		MouseAdapter ml = new MouseAdapter() {
 
