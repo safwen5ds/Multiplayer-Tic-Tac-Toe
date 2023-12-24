@@ -18,6 +18,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class MainMenu extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -27,10 +28,11 @@ public class MainMenu extends JFrame {
 	 * @throws UnsupportedAudioFileException
 	 * @throws IOException
 	 * @throws LineUnavailableException
+	 * @throws URISyntaxException 
 	 */
 	
 	@SuppressWarnings("deprecation")
-	public MainMenu() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+	public MainMenu() throws UnsupportedAudioFileException, IOException, LineUnavailableException, URISyntaxException {
 		super("Demostrating BoxLayout");
 		
 		BufferedImage cursorImg = ImageIO.read(getClass().getResource("/Images/rifle_cursor.png"));
@@ -119,7 +121,7 @@ public class MainMenu extends JFrame {
 	    DataLine.Info info;
 	    Clip clip;
 		
-	    File background_music = new File("/Images/videoplayback.mp3");
+	    File background_music = new File(getClass().getResource("/Images/videoplayback.mp3").toURI());
 	    
 	    stream = AudioSystem.getAudioInputStream(background_music);
 	    format = stream.getFormat();
@@ -209,7 +211,7 @@ public class MainMenu extends JFrame {
 		show();
 	}
 
-	public static void main(String args[]) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+	public static void main(String args[]) throws UnsupportedAudioFileException, IOException, LineUnavailableException, URISyntaxException {
 		MainMenu app = new MainMenu();
 
 		app.addWindowListener(new WindowAdapter() {
