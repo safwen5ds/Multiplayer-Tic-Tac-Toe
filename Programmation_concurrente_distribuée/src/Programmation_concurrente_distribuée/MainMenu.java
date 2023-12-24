@@ -46,17 +46,16 @@ public class MainMenu extends JFrame {
 		Color c = new Color(251, 251, 127);
 		Color c2 = new Color(40, 39, 38);
 		
-		//Set the layout of our frame as a BorderLayout
+
 		setLayout(new BorderLayout());
 		
-		//Adding the background image
+
 		BufferedImage backgroundImg = ImageIO.read(getClass().getResource("/Images/menu_background.png"));
         JLabel backgroundLabel = new JLabel(new ImageIcon(backgroundImg));
         setContentPane(backgroundLabel);
-		//Creating  a Box that contains everything
+
 		Box left = Box.createVerticalBox();
 		
-		//Creating all buttons
 		JButton newGame = new JButton("NEW GAME"), exit = new JButton("EXIT GAME"),
 				option = new JButton("OPTIONS"), about = new JButton("ABOUT");
 		newGame.addActionListener(new ActionListener() {
@@ -79,8 +78,6 @@ public class MainMenu extends JFrame {
 		Border blackLine = BorderFactory.createLineBorder(Color.BLACK);
 		secondPanel.setBorder(blackLine);
 		
-		//Design setting only. I�ve left the code to each other repeated in case you want
-		//want something like each button with a different color or font.
 		newGame.setFocusPainted(false);
 		newGame.setBorder(BorderFactory.createMatteBorder(5, 0, 5, 0, new Color(97, 93, 92)));
 		newGame.setForeground(new Color(57,57,57));
@@ -117,9 +114,6 @@ public class MainMenu extends JFrame {
 		exit.setContentAreaFilled(false);
 		exit.setBorderPainted(false);
 
-	    //If you want to have a background music add the path of it here and uncomment it
-	    
-		//Necessary variables for the audios
 	    AudioInputStream stream;
 	    AudioFormat format;
 	    DataLine.Info info;
@@ -160,7 +154,7 @@ public class MainMenu extends JFrame {
 				AudioClip sound = null;
 				sound = Applet.newAudioClip(getClass().getResource("/Images/action.wav"));
 				sound.play();
-				// clip.stop(); --> uncomment if you have added a background music
+				clip.stop(); 
 			}
 		};
 
@@ -168,48 +162,39 @@ public class MainMenu extends JFrame {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 				dispose();
-				//clip.stop();  --> uncomment if you have added a background music
+				clip.stop();  
             }
         });
 	    
-	    //to add an extra space
 		secondPanel.add(Box.createVerticalStrut(1));
-		//add the title
-	    JLabel label = new JLabel("<html>TIC-TAC-TOE<br>&nbsp;&nbsp;&nbsp;GAME</html>", SwingConstants.CENTER);
-	    //Design settings
+		JLabel label = new JLabel("<html><center>TIC-TAC-TOE<br>GAME</center></html>", SwingConstants.CENTER);
 	    label.setForeground(Color.black);
 	    label.setFont(new Font("Bookerly", Font.BOLD, 20));
-	    //Add the title to the the Panel
 	    secondPanel.add(label);
 		secondPanel.add(Box.createVerticalStrut(1));
-		//Add the mouse Listeners
 		newGame.addMouseListener(ml);
 		exit.addMouseListener(ml);
 		about.addMouseListener(ml);
 		option.addMouseListener(ml);
 		
-		//Add the buttons to the Panel
 		secondPanel.add(newGame);
 		secondPanel.add(about);
 		secondPanel.add(option);
 		secondPanel.add(exit);
 		
-		//add the panel to the box
 		left.add(secondPanel);
 		Box top = Box.createHorizontalBox();
 		top.add(left);
 		
-		//get the content pane from the frame and add there the "top" box
 		Container content = getContentPane();
 		content.setLayout(new BorderLayout());
 		content.add(top, BorderLayout.WEST);
 
-		//set frame size
         setSize(backgroundImg.getWidth(), backgroundImg.getHeight());
 		
 
         setUndecorated(true);
-        setLocationRelativeTo(null); // center the frame
+        setLocationRelativeTo(null); 
         setVisible(true);
 
 		show();
