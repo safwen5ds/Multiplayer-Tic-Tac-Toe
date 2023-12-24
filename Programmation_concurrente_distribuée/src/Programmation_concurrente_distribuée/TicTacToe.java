@@ -530,7 +530,7 @@ public void declareWinner() {
     if (player1Points == player2Points) {
         winnerText = "It's a Draw!";
     }
-    if (currentMatch != numberOfMatches)
+    if (currentMatch < numberOfMatches)
     {
         JOptionPane.showConfirmDialog(frame, "Proceed to the next match?", "Next Match", JOptionPane.YES_OPTION) ;
 
