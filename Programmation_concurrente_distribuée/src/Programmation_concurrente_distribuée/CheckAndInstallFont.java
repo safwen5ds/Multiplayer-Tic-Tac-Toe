@@ -6,9 +6,9 @@ import java.io.InputStream;
 public class CheckAndInstallFont {
 
     public static void main(String[] args) {
-        // Check if the font is installed
+
         if (!isFontInstalled("FontsFree-Net-Bookerly")) {
-            // If not, install the font from resources
+
             installFont("/Images/FontsFree-Net-Bookerly.ttf");
         } else {
             System.out.println("Font already installed.");
