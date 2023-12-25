@@ -31,7 +31,6 @@ public class TCP {
 	        tic.setMyTurn(true);
 	        isServer = true;
 
-	        // Always prompt for the number of matches
 	        String matchesInput = JOptionPane.showInputDialog(tic.getFrame(), "Enter Number of Matches:", "5");
 	        int numMatches = Integer.parseInt(matchesInput);
 	        tic.setNumberOfMatches(numMatches);
@@ -102,15 +101,37 @@ public class Listener implements Runnable {
 	         while (true) {
 	             try {
 	                 String message = (String) ois.readObject();
-	                 if (message.equals("GAME_OVER")) {
+	                 if (message.startsWith("NEXT_MATCH:")) {
+	                     String nextMatchMessage = message.substring("NEXT_MATCH:".length());
 	                     SwingUtilities.invokeLater(() -> {
-	                         for (JButton button : tic.getButtons()) {
-	                             button.setEnabled(false);
-	                         }
-	                         tic.getTextfield().setText("Game Over");
+	                         JOptionPane.showMessageDialog(tic.getFrame(), nextMatchMessage);
+	                         tic.resetGame();
 	                     });
-	                     break; 
 	                 }
+
+	                 if (message.startsWith("GAME_OUTCOME:")) {
+	                     if (!tic.isGameOutcomeProcessed()) {
+	                         tic.setGameOutcomeProcessed(true);
+	                         String winnerText = message.substring("GAME_OUTCOME:".length());
+	                         SwingUtilities.invokeLater(() -> {
+	                             JOptionPane.showMessageDialog(tic.getFrame(), winnerText);
+	                             tic.getTextfield().setText("Game Over");
+	                             for (JButton button : tic.getButtons()) {
+	                                 button.setEnabled(false);
+	                             }
+	                         });
+	                     }
+	                 }
+
+	                 
+
+
+	                 if (message.startsWith("DOUBLE_POINTS_MATCH:")) {
+	                     String[] parts = message.split(":");
+	                     int matchNumber = Integer.parseInt(parts[1]);
+	                     tic.setDoublePointsMatch(matchNumber);
+	                 }
+	                
 		                if (message.startsWith("MOVE:")) {
 		                    String[] parts = message.split(":");
 		                    int position = Integer.parseInt(parts[1]);
@@ -238,6 +259,14 @@ public void restartNetwork() {
 
     starting();
 }
+public void sendDoublePointsMatch(int matchNumber) {
+    try {
+        oos.writeObject("DOUBLE_POINTS_MATCH:" + matchNumber);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
 
 
 

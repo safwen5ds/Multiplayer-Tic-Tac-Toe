@@ -29,6 +29,8 @@ public class TicTacToe implements ActionListener{
     private JPanel controlPanel = new JPanel();
     private JFrame pointsFrame = new JFrame();
 	private int doublePointsMatch;
+	private boolean gameOutcomeProcessed = false;
+
 
  
     private boolean Not_valid_port(int port)
@@ -194,6 +196,7 @@ public class TicTacToe implements ActionListener{
 
 
         tcp.restartNetwork();  
+        gameOutcomeProcessed = false;
     }
 
 
@@ -295,9 +298,8 @@ public class TicTacToe implements ActionListener{
 	 System.out.println("checkForEndOfGame : "+currentMatch +" | "+numberOfMatches);
 	    if (currentMatch == numberOfMatches) {
 	        declareWinner();
-	        for (int i = 0; i < 16; i++) {
-	            buttons[i].setEnabled(false);
-	        }
+	   
+	       
 	        
 	    } 
 	}
@@ -397,21 +399,19 @@ public void draw() {
 
 
 private void handleMatchCompletion() {
-	  checkForEndOfGame();
-	  System.out.println("handleMatchCompletion : "+currentMatch +" | "+numberOfMatches);
-	  
-	  if (currentMatch < numberOfMatches) {
-	    int nextMatchNumber = currentMatch + 1;
-	    String nextMatchMessage = "NEXT IS MATCH " + nextMatchNumber + " !";
-	    JOptionPane.showMessageDialog(null, nextMatchMessage);
-	    resetGame(); 
-	  } else {
-	    declareWinner();
-	    for (int i = 0; i < 16; i++) {
-	        buttons[i].setEnabled(false);
-	    }
-	  }
-	}
+    checkForEndOfGame();
+    System.out.println("handleMatchCompletion : " + currentMatch + " | " + numberOfMatches);
+
+    if (currentMatch < numberOfMatches) {
+        int nextMatchNumber = currentMatch + 1;
+        String nextMatchMessage = "NEXT IS MATCH " + nextMatchNumber + " !";
+        tcp.sendMessage("NEXT_MATCH:" + nextMatchMessage);
+        JOptionPane.showMessageDialog(null, nextMatchMessage);
+        resetGame();
+    } else {
+        declareWinner();
+    }
+}
 
 
 private void highlightWinningButtons(int a, int b, int c, int d) {
@@ -520,35 +520,37 @@ public void setNumberOfMatches(int numberOfMatches) {
     this.numberOfMatches = numberOfMatches;
 }
 public void setRandomDoublePointsMatch() {
-    if(numberOfMatches > 1) {
+    if (tcp.isServer() && numberOfMatches > 1) {
         Random rand = new Random();
         this.doublePointsMatch = numberOfMatches / 2 + rand.nextInt(numberOfMatches / 2);
+        tcp.sendDoublePointsMatch(this.doublePointsMatch);
     }
 }
+
 public void declareWinner() {
     String winnerText = player1Points > player2Points ? "Player 1 Wins!" : "Player 2 Wins!";
     if (player1Points == player2Points) {
         winnerText = "It's a Draw!";
     }
-    if (currentMatch < numberOfMatches)
-    {
-        JOptionPane.showConfirmDialog(frame, "Proceed to the next match?", "Next Match", JOptionPane.YES_OPTION) ;
 
+    if (currentMatch == numberOfMatches) {
+        tcp.sendMessage("GAME_OUTCOME:" + winnerText);
+        if (!gameOutcomeProcessed) {
+            gameOutcomeProcessed = true;
+            JOptionPane.showMessageDialog(frame, winnerText);
+            SwingUtilities.invokeLater(() -> {
+                for (JButton button : buttons) {
+                    button.setEnabled(false);
+                }
+                textfield.setText("Game Over");
+            });
+        }
     }
-    if (currentMatch == numberOfMatches)
-    {
-    	JOptionPane.showMessageDialog(frame, winnerText);
-    	  SwingUtilities.invokeLater(() -> {
-    	        for (JButton button : buttons) {
-    	            button.setEnabled(false);  
-    	        }
-    	        textfield.setText("Game Over"); 
-    	    });
-
-    	    tcp.sendMessage("GAME_OVER");
-    }
-    
 }
+
+
+
+
 
 private void updatePointsDisplay() {
     pointsLabel.setText("Player 1 Points: " + player1Points + ", Player 2 Points: " + player2Points);
@@ -558,6 +560,16 @@ private void updatePointsDisplay() {
     	JOptionPane.showMessageDialog(frame, "It Is A Double Points Match !!");
     }
 }
+public void setDoublePointsMatch(int matchNumber) {
+    this.doublePointsMatch = matchNumber;
+}
+public boolean isGameOutcomeProcessed() {
+	return gameOutcomeProcessed;
+}
+public void setGameOutcomeProcessed(boolean gameOutcomeProcessed) {
+	this.gameOutcomeProcessed = gameOutcomeProcessed;
+}
+
 
 }
 
