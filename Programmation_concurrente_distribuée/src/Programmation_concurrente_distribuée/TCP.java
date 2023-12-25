@@ -34,6 +34,8 @@ public class TCP {
 	        String matchesInput = JOptionPane.showInputDialog(tic.getFrame(), "Enter Number of Matches:", "5");
 	        int numMatches = Integer.parseInt(matchesInput);
 	        tic.setNumberOfMatches(numMatches);
+	        tic.setNumberOfMatches(numMatches);
+	        sendNumberOfMatches(numMatches);
 	        tic.setRandomDoublePointsMatch();
 	    } else {
 	        if (socket == null || socket.isClosed()) {

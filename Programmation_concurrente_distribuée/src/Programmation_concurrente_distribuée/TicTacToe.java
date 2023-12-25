@@ -24,7 +24,7 @@ public class TicTacToe implements ActionListener{
     private int player1Points = 0;
     private int player2Points = 0;
     private int currentMatch = 0;
-    private int numberOfMatches = 0;
+    private int numberOfMatches ;
     private JLabel pointsLabel = new JLabel();
     private JPanel controlPanel = new JPanel();
     private JFrame pointsFrame = new JFrame();
@@ -294,7 +294,7 @@ public class TicTacToe implements ActionListener{
 
  public void checkForEndOfGame() {
 	 System.out.println("checkForEndOfGame : "+currentMatch +" | "+numberOfMatches);
-	    if (currentMatch >= numberOfMatches) {
+	    if (currentMatch == numberOfMatches) {
 	        declareWinner();
 	   
 	       
@@ -329,6 +329,8 @@ public void xWins(int a, int b, int c, int d) {
 		  player1Points += 0;
 	      player2Points += 3000;
 	  }
+	  
+	  System.out.println("player 1 : "+player1Points+" | Player 2 : "+player2Points);
      
   }
 
@@ -341,7 +343,7 @@ public void oWins(int a, int b, int c, int d) {
   highlightWinningButtons(a, b, c, d);
   textfield.setText("O wins");
 
-  if (tcp.isServer()) { // Server is O
+  if (tcp.isServer()) { 
 	  if (currentMatch!=doublePointsMatch)
 	  {
 		  player1Points += 0;
@@ -362,7 +364,7 @@ public void oWins(int a, int b, int c, int d) {
 		  player1Points += 3000;
 	      player2Points += 0;
 	  }
-      
+	  System.out.println("player 1 : "+player1Points+" | Player 2 : "+player2Points);
   }
 
   updatePointsDisplay();
@@ -387,7 +389,7 @@ public void draw() {
 	  player1Points += 1000;
 	  player2Points += 1000;
   }
-
+  System.out.println("player 1 : "+player1Points+" | Player 2 : "+player2Points);
 
   updatePointsDisplay();
   currentMatch++;
