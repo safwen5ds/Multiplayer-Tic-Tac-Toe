@@ -29,7 +29,6 @@ public class TicTacToe implements ActionListener{
     private JPanel controlPanel = new JPanel();
     private JFrame pointsFrame = new JFrame();
 	private int doublePointsMatch;
-	private boolean gameOutcomeProcessed = false;
 
 
  
@@ -196,7 +195,6 @@ public class TicTacToe implements ActionListener{
 
 
         tcp.restartNetwork();  
-        gameOutcomeProcessed = false;
     }
 
 
@@ -296,7 +294,7 @@ public class TicTacToe implements ActionListener{
 
  public void checkForEndOfGame() {
 	 System.out.println("checkForEndOfGame : "+currentMatch +" | "+numberOfMatches);
-	    if (currentMatch == numberOfMatches) {
+	    if (currentMatch >= numberOfMatches) {
 	        declareWinner();
 	   
 	       
@@ -401,7 +399,7 @@ public void draw() {
 private void handleMatchCompletion() {
     checkForEndOfGame();
     System.out.println("handleMatchCompletion : " + currentMatch + " | " + numberOfMatches);
-
+    tcp.sendMessage("MATCH_NUMBER:" + currentMatch);
     if (currentMatch < numberOfMatches) {
         int nextMatchNumber = currentMatch + 1;
         String nextMatchMessage = "NEXT IS MATCH " + nextMatchNumber + " !";
@@ -528,25 +526,26 @@ public void setRandomDoublePointsMatch() {
 }
 
 public void declareWinner() {
-    String winnerText = player1Points > player2Points ? "Player 1 Wins!" : "Player 2 Wins!";
-    if (player1Points == player2Points) {
-        winnerText = "It's a Draw!";
-    }
 
-    if (currentMatch == numberOfMatches) {
-        tcp.sendMessage("GAME_OUTCOME:" + winnerText);
-        if (!gameOutcomeProcessed) {
-            gameOutcomeProcessed = true;
-            JOptionPane.showMessageDialog(frame, winnerText);
-            SwingUtilities.invokeLater(() -> {
-                for (JButton button : buttons) {
-                    button.setEnabled(false);
-                }
-                textfield.setText("Game Over");
-            });
-        }
-    }
-}
+		 String winnerText = player1Points > player2Points ? "Player 1 Wins!" : "Player 2 Wins!";
+		    if (player1Points == player2Points) {
+		        winnerText = "It's a Draw!";
+		    }
+
+		    if (currentMatch == numberOfMatches) {
+		        tcp.sendMessage("GAME_OUTCOME:" + winnerText);
+		            JOptionPane.showMessageDialog(frame, winnerText);
+		            SwingUtilities.invokeLater(() -> {
+		                for (JButton button : buttons) {
+		                    button.setEnabled(false);
+		                }
+		                textfield.setText("Game Over");
+		            });
+		        }
+		    }
+
+   
+
 
 
 
@@ -563,11 +562,13 @@ private void updatePointsDisplay() {
 public void setDoublePointsMatch(int matchNumber) {
     this.doublePointsMatch = matchNumber;
 }
-public boolean isGameOutcomeProcessed() {
-	return gameOutcomeProcessed;
-}
-public void setGameOutcomeProcessed(boolean gameOutcomeProcessed) {
-	this.gameOutcomeProcessed = gameOutcomeProcessed;
+
+
+
+
+public void setmatchnumber(int matchNumber) {
+	this.currentMatch = matchNumber;
+	
 }
 
 

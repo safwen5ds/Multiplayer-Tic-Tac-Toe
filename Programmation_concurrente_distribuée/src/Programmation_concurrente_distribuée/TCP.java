@@ -101,7 +101,17 @@ public class Listener implements Runnable {
 	         while (true) {
 	             try {
 	                 String message = (String) ois.readObject();
-	                 System.out.println("Received message: " + message); // Log received message
+	                 System.out.println("Received message: " + message); 
+	                 if (message.startsWith("NUMBER_OF_MATCHES:")) {
+	                     int numberOfMatches = Integer.parseInt(message.split(":")[1]);
+	                     tic.setNumberOfMatches(numberOfMatches);
+	                 }
+	                 if (message.startsWith("MATCH_NUMBER:")) {
+	                     int matchNumber = Integer.parseInt(message.split(":")[1]);
+	                     SwingUtilities.invokeLater(() -> {
+	                         tic.setmatchnumber(matchNumber);
+	                     });
+	                 }
 	                 if (message.startsWith("NEXT_MATCH:")) {
 	                     String nextMatchMessage = message.substring("NEXT_MATCH:".length());
 	                     SwingUtilities.invokeLater(() -> {
@@ -110,19 +120,17 @@ public class Listener implements Runnable {
 	                     });
 	                 }
 
-	                 if (message.startsWith("GAME_OUTCOME:")) {
-	                     if (!tic.isGameOutcomeProcessed()) {
-	                         tic.setGameOutcomeProcessed(true);
-	                         String winnerText = message.substring("GAME_OUTCOME:".length());
-	                         SwingUtilities.invokeLater(() -> {
-	                             JOptionPane.showMessageDialog(tic.getFrame(), winnerText);
-	                             tic.getTextfield().setText("Game Over");
-	                             for (JButton button : tic.getButtons()) {
-	                                 button.setEnabled(false);
-	                             }
-	                         });
-	                     }
-	                 }
+	                 if (message.startsWith("GAME_OUTCOME:") ) {
+	                	    String winnerText = message.substring("GAME_OUTCOME:".length());
+	                	    SwingUtilities.invokeLater(() -> {
+	                	        JOptionPane.showMessageDialog(tic.getFrame(), winnerText);
+	                	        tic.getTextfield().setText("Game Over");
+	                	        for (JButton button : tic.getButtons()) {
+	                	            button.setEnabled(false);
+	                	        }
+	                	    });
+	                	}
+
 
 	                 
 
@@ -267,6 +275,15 @@ public void sendDoublePointsMatch(int matchNumber) {
         e.printStackTrace();
     }
 }
+
+public void sendNumberOfMatches(int numberOfMatches) {
+ try {
+     oos.writeObject("NUMBER_OF_MATCHES:" + numberOfMatches);
+ } catch (IOException e) {
+     e.printStackTrace();
+ }
+}
+
 
 
 
