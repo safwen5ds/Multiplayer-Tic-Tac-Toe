@@ -30,13 +30,7 @@ public class TCP {
 	        tic.setPlayer1_turn(true);
 	        tic.setMyTurn(true);
 	        isServer = true;
-
-	        String matchesInput = JOptionPane.showInputDialog(tic.getFrame(), "Enter Number of Matches:", "5");
-	        int numMatches = Integer.parseInt(matchesInput);
-	        tic.setNumberOfMatches(numMatches);
-	        tic.setNumberOfMatches(numMatches);
-	        sendNumberOfMatches(numMatches);
-	        tic.setRandomDoublePointsMatch();
+	        
 	    } else {
 	        if (socket == null || socket.isClosed()) {
 	            if (!connectToServer(tic.getIp(), tic.getPort())) {
@@ -108,12 +102,20 @@ public class Listener implements Runnable {
 	                     int numberOfMatches = Integer.parseInt(message.split(":")[1]);
 	                     tic.setNumberOfMatches(numberOfMatches);
 	                 }
+	                 
+	                 if (message.startsWith("DOUBLE_POINTS_MATCH:")) {
+	                     String[] parts = message.split(":");
+	                     int matchNumber = Integer.parseInt(parts[1]);
+	                     tic.setDoublePointsMatch(matchNumber);
+	                 }
+	                 
 	                 if (message.startsWith("MATCH_NUMBER:")) {
 	                     int matchNumber = Integer.parseInt(message.split(":")[1]);
 	                     SwingUtilities.invokeLater(() -> {
 	                         tic.setmatchnumber(matchNumber);
 	                     });
 	                 }
+	                 
 	                 if (message.startsWith("NEXT_MATCH:")) {
 	                     String nextMatchMessage = message.substring("NEXT_MATCH:".length());
 	                     SwingUtilities.invokeLater(() -> {
@@ -121,26 +123,10 @@ public class Listener implements Runnable {
 	                         tic.resetGame();
 	                     });
 	                 }
-
-	                 if (message.startsWith("GAME_OUTCOME:") ) {
-	                	    String winnerText = message.substring("GAME_OUTCOME:".length());
-	                	    SwingUtilities.invokeLater(() -> {
-	                	        JOptionPane.showMessageDialog(tic.getFrame(), winnerText);
-	                	        tic.getTextfield().setText("Game Over");
-	                	        for (JButton button : tic.getButtons()) {
-	                	            button.setEnabled(false);
-	                	        }
-	                	    });
-	                	}
-
-
 	                 
-
-
-	                 if (message.startsWith("DOUBLE_POINTS_MATCH:")) {
-	                     String[] parts = message.split(":");
-	                     int matchNumber = Integer.parseInt(parts[1]);
-	                     tic.setDoublePointsMatch(matchNumber);
+	                 if (message.startsWith("DOUBLE_START"))
+	                 {
+	                	 JOptionPane.showMessageDialog(tic.getFrame(), "It Is A Double Points Match !!");
 	                 }
 	                
 		                if (message.startsWith("MOVE:")) {
@@ -156,6 +142,22 @@ public class Listener implements Runnable {
 		                        }
 		                    });
 		                }
+		                
+			            
+		                 
+			              
+
+		                 if (message.startsWith("GAME_OUTCOME:") ) {
+		                	    String winnerText = message.substring("GAME_OUTCOME:".length());
+		                	    SwingUtilities.invokeLater(() -> {
+		                	        JOptionPane.showMessageDialog(tic.getFrame(), winnerText);
+		                	        tic.getTextfield().setText("Game Over");
+		                	        for (JButton button : tic.getButtons()) {
+		                	            button.setEnabled(false);
+		                	        }
+		                	    });
+		                	}
+
 		            } catch (IOException | ClassNotFoundException e) {
 		                e.printStackTrace();
 		                break;

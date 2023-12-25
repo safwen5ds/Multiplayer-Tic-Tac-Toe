@@ -119,6 +119,14 @@ public class TicTacToe implements ActionListener{
         title_panel.add(replayButton, BorderLayout.SOUTH);
 
        tcp.starting();
+       if (tcp.isServer())
+       {
+    	   String matchesInput = JOptionPane.showInputDialog(frame, "Enter Number of Matches:", "5");
+           numberOfMatches = Integer.parseInt(matchesInput);
+           tcp.sendNumberOfMatches(numberOfMatches );
+       }
+         setRandomDoublePointsMatch();
+       
         updateTextfield();
         frame.validate();
         frame.repaint();
@@ -406,7 +414,6 @@ private void handleMatchCompletion() {
         int nextMatchNumber = currentMatch + 1;
         String nextMatchMessage = "NEXT IS MATCH " + nextMatchNumber + " !";
         tcp.sendMessage("NEXT_MATCH:" + nextMatchMessage);
-        JOptionPane.showMessageDialog(null, nextMatchMessage);
         resetGame();
     } else {
         declareWinner();
@@ -536,7 +543,6 @@ public void declareWinner() {
 
 		    if (currentMatch == numberOfMatches) {
 		        tcp.sendMessage("GAME_OUTCOME:" + winnerText);
-		            JOptionPane.showMessageDialog(frame, winnerText);
 		            SwingUtilities.invokeLater(() -> {
 		                for (JButton button : buttons) {
 		                    button.setEnabled(false);
@@ -558,7 +564,7 @@ private void updatePointsDisplay() {
     pointsFrame.repaint();
     if (currentMatch == doublePointsMatch)
     {
-    	JOptionPane.showMessageDialog(frame, "It Is A Double Points Match !!");
+    	tcp.sendMessage("DOUBLE_START");
     }
 }
 public void setDoublePointsMatch(int matchNumber) {
