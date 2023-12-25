@@ -101,6 +101,7 @@ public class Listener implements Runnable {
 	         while (true) {
 	             try {
 	                 String message = (String) ois.readObject();
+	                 System.out.println("Received message: " + message); // Log received message
 	                 if (message.startsWith("NEXT_MATCH:")) {
 	                     String nextMatchMessage = message.substring("NEXT_MATCH:".length());
 	                     SwingUtilities.invokeLater(() -> {
