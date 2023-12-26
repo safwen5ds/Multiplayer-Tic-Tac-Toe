@@ -116,11 +116,11 @@ public class TicTacToe implements ActionListener{
         replayButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tcp.closeFirewallPort();
-                tcp.closeNetworkConnection();
-                frame.dispose();
-                pointsFrame.dispose(); 
-                new TicTacToe(mainMenu); 
+            	tcp.closeFirewallPort();
+ 		        tcp.closeNetworkConnection();
+ 		        frame.dispose();
+ 		        pointsFrame.dispose();
+ 		        mainMenu.setVisible(true); 
             }
         });
 
