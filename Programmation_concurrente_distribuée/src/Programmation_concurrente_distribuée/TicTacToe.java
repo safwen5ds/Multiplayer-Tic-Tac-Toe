@@ -4,6 +4,9 @@ package Programmation_concurrente_distribuée;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,13 +55,14 @@ public class TicTacToe implements ActionListener{
     	 frame.addWindowListener(new WindowAdapter() {
     		    @Override
     		    public void windowClosing(WindowEvent e) {
-    		    	tcp.closeFirewallPort();
-    		    	tcp.closeNetworkConnection();
-    		        frame.dispose(); 
+    		        tcp.closeFirewallPort();
+    		        tcp.closeNetworkConnection();
+    		        frame.dispose();
     		        pointsFrame.dispose();
     		        mainMenu.setVisible(true); 
     		    }
     		});
+
 
         ip = JOptionPane.showInputDialog(frame, "Enter IP Address:", "localhost");
         port = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter Port:", "22222"));
@@ -112,9 +116,15 @@ public class TicTacToe implements ActionListener{
         replayButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	restartGame();
+                tcp.closeFirewallPort();
+                tcp.closeNetworkConnection();
+                frame.dispose();
+                pointsFrame.dispose(); 
+                new TicTacToe(mainMenu); 
             }
         });
+
+
 
         title_panel.add(replayButton, BorderLayout.SOUTH);
 
@@ -138,9 +148,7 @@ public class TicTacToe implements ActionListener{
         pointsFrame.add(pointsLabel, BorderLayout.CENTER);
         pointsFrame.setVisible(true);
     }
-    public void proceedToNextMatch() {
-        resetGame();
-    }
+
 
    
 
@@ -157,9 +165,6 @@ public class TicTacToe implements ActionListener{
                 player1_turn = !player1_turn;
                 updateTextfield();
                 check();
-                if (areAllButtonsUsed(buttons)) {
-                    proceedToNextMatch();
-                }
                 break;
             }
         }
@@ -185,25 +190,7 @@ public class TicTacToe implements ActionListener{
         updateTextfield();
     }
     
-    public void restartGame() {
-        for (JButton button : buttons) {
-            button.setText("");
-            button.setEnabled(true);
-            button.setBackground(new JButton().getBackground());
-        }
 
-
-        player1Points = 0;
-        player2Points = 0;
-        currentMatch = 0;
-
-
-        textfield.setText("Tic-Tac-Toe");
-        updatePointsDisplay();
-
-
-        tcp.restartNetwork();  
-    }
 
 
 
@@ -217,7 +204,6 @@ public class TicTacToe implements ActionListener{
 			  buttons[i].getText().equals(buttons[i+3].getText()))
 		{
 			xWins(i, i+1, i+2, i+3);
-			proceedToNextMatch();
 		}
 		
 		if (buttons[i].getText().equals("O") &&
@@ -226,7 +212,6 @@ public class TicTacToe implements ActionListener{
 				  buttons[i].getText().equals(buttons[i+3].getText()))
 			{
 				oWins(i, i+1, i+2, i+3);
-				proceedToNextMatch();
 			}
 	}
 
@@ -238,7 +223,6 @@ public class TicTacToe implements ActionListener{
 				  buttons[i].getText().equals(buttons[i+12].getText()))
 			{
 				xWins(i, i+4, i+8, i+12);
-				proceedToNextMatch();
 			}
 			
 			if (buttons[i].getText().equals("O") &&
@@ -247,7 +231,6 @@ public class TicTacToe implements ActionListener{
 					  buttons[i].getText().equals(buttons[i+12].getText()))
 				{
 					oWins(i, i+4, i+8, i+12);
-					proceedToNextMatch();
 				}
 		
 	}
@@ -258,7 +241,6 @@ public class TicTacToe implements ActionListener{
 			{
 				xWins(0, 5, 10, 15);
 
-				proceedToNextMatch();
 			}
 			
 			if (buttons[0].getText().equals("O") &&
@@ -268,7 +250,6 @@ public class TicTacToe implements ActionListener{
 				{
 					oWins(0, 5, 10, 15);
 
-					proceedToNextMatch();
 				}
 			if (buttons[3].getText().equals("X") &&
 					  buttons[3].getText().equals(buttons[6].getText()) &&
@@ -277,7 +258,6 @@ public class TicTacToe implements ActionListener{
 				{
 					xWins(3, 6, 9, 12);
 
-					proceedToNextMatch();
 				}
 				
 				if (buttons[3].getText().equals("O") &&
@@ -287,7 +267,6 @@ public class TicTacToe implements ActionListener{
 					{
 						oWins(3, 6, 9, 12);
 
-						proceedToNextMatch();
 					}
 		
 	
@@ -295,7 +274,6 @@ public class TicTacToe implements ActionListener{
         {
 	    	draw();
 
-	    	proceedToNextMatch();
         }
 
 	}
@@ -315,7 +293,6 @@ public void xWins(int a, int b, int c, int d) {
   highlightWinningButtons(a, b, c, d);
   textfield.setText("X wins");
 
-  if (tcp.isServer()) { // Server is X
 	  if (currentMatch!=doublePointsMatch)
 	  {
 		  player1Points += 1500;
@@ -326,21 +303,10 @@ public void xWins(int a, int b, int c, int d) {
 	      player2Points += 0;
 	  }
 		  
-      
-  } else {
-	  if (currentMatch!=doublePointsMatch)
-	  {
-		  player1Points += 0;
-	      player2Points += 1500;
-	  }else
-	  {
-		  player1Points += 0;
-	      player2Points += 3000;
-	  }
 	  
 	  System.out.println("player 1 : "+player1Points+" | Player 2 : "+player2Points);
      
-  }
+  
 
   updatePointsDisplay();
   currentMatch++;
@@ -351,7 +317,7 @@ public void oWins(int a, int b, int c, int d) {
   highlightWinningButtons(a, b, c, d);
   textfield.setText("O wins");
 
-  if (tcp.isServer()) { 
+
 	  if (currentMatch!=doublePointsMatch)
 	  {
 		  player1Points += 0;
@@ -361,19 +327,8 @@ public void oWins(int a, int b, int c, int d) {
 		  player1Points += 0;
 	      player2Points += 3000;
 	  }
-      
-  } else {
-	  if (currentMatch!=doublePointsMatch)
-	  {
-		  player1Points += 1500;
-	      player2Points += 0;
-	  }else
-	  {
-		  player1Points += 3000;
-	      player2Points += 0;
-	  }
+  
 	  System.out.println("player 1 : "+player1Points+" | Player 2 : "+player2Points);
-  }
 
   updatePointsDisplay();
   currentMatch++;
@@ -414,10 +369,16 @@ private void handleMatchCompletion() {
         int nextMatchNumber = currentMatch + 1;
         String nextMatchMessage = "NEXT IS MATCH " + nextMatchNumber + " !";
         tcp.sendMessage("NEXT_MATCH:" + nextMatchMessage);
-        resetGame();
-    } else {
-        declareWinner();
-    }
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+        Runnable task = new Runnable() {
+            public void run() {
+                resetGame();
+            }
+        };
+
+        scheduler.schedule(task, 5, TimeUnit.SECONDS); 
+    } 
 }
 
 
@@ -527,7 +488,7 @@ public void setNumberOfMatches(int numberOfMatches) {
     this.numberOfMatches = numberOfMatches;
 }
 public void setRandomDoublePointsMatch() {
-    if (tcp.isServer() && numberOfMatches > 1) {
+    if (tcp.isServer() && numberOfMatches > 2) {
         Random rand = new Random();
         this.doublePointsMatch = numberOfMatches / 2 + rand.nextInt(numberOfMatches / 2);
         tcp.sendDoublePointsMatch(this.doublePointsMatch);
@@ -542,14 +503,10 @@ public void declareWinner() {
 		    }
 
 		    if (currentMatch == numberOfMatches) {
-		        tcp.sendMessage("GAME_OUTCOME:" + winnerText);
-		            SwingUtilities.invokeLater(() -> {
-		                for (JButton button : buttons) {
-		                    button.setEnabled(false);
-		                }
-		                textfield.setText("Game Over");
-		            });
-		        }
+		        tcp.sendMessage("GAME_OUTCOME:" + winnerText) ;
+		        
+		    }
+
 		    }
 
    
