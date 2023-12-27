@@ -293,7 +293,7 @@ public void xWins(int a, int b, int c, int d) {
   highlightWinningButtons(a, b, c, d);
   textfield.setText("X wins");
 
-	  if (currentMatch!=doublePointsMatch)
+	  if (currentMatch == doublePointsMatch+1)
 	  {
 		  player1Points += 1500;
 	      player2Points += 0;
