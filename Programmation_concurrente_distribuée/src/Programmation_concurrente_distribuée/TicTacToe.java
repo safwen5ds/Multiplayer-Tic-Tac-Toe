@@ -318,7 +318,7 @@ public void oWins(int a, int b, int c, int d) {
   textfield.setText("O wins");
 
 
-	  if (currentMatch!=doublePointsMatch)
+	  if (currentMatch== doublePointsMatch+1)
 	  {
 		  player1Points += 0;
 	      player2Points += 1500;
