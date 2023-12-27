@@ -124,7 +124,10 @@ public class Listener implements Runnable {
 	                     });
 	                 }
 	                 
-	                
+	                 if (message.startsWith("DOUBLE_START"))
+	                 {
+	                	 JOptionPane.showMessageDialog(tic.getFrame(), "It Is A Double Points Match !!");
+	                 }
 	                
 		                if (message.startsWith("MOVE:")) {
 		                    String[] parts = message.split(":");
@@ -139,12 +142,6 @@ public class Listener implements Runnable {
 		                        }
 		                    });
 		                }
-		                
-		                if (message.startsWith("DOUBLE_START"))
-		                 {
-		                	 JOptionPane.showMessageDialog(tic.getFrame(), "It Is A Double Points Match !!");
-		                 }
-			              
 
 		                 if (message.startsWith("GAME_OUTCOME:") ) {
 		                	    String winnerText = message.substring("GAME_OUTCOME:".length());
