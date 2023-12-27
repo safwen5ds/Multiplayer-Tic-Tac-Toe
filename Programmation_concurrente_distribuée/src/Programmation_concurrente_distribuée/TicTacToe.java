@@ -67,13 +67,11 @@ public class TicTacToe implements ActionListener{
     	 String ipInput = JOptionPane.showInputDialog(frame, "Enter IP Address:", "localhost");
     	    String portInput = JOptionPane.showInputDialog(frame, "Enter Port:", "22222");
 
-    	    // Validate and parse IP address
     	    while (!valid_ip(ipInput)) {
     	        ipInput = JOptionPane.showInputDialog(frame, "Enter valid IP Address:", "localhost");
     	    }
     	    this.ip = ipInput;
-
-    	    // Validate and parse port number
+    	    
     	    while (true) {
     	        try {
     	            if (portInput != null && !portInput.trim().isEmpty()) {
