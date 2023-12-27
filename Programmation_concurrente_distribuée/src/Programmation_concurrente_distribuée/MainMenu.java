@@ -23,6 +23,8 @@ import java.net.URL;
 
 public class MainMenu extends JFrame {
 	private static final long serialVersionUID = 1L;
+    private Clip clip;
+    private boolean isMusicPlaying = true;
 	
 	/**
 	 * 
@@ -96,7 +98,12 @@ public class MainMenu extends JFrame {
 		option.setOpaque(false);
 		option.setContentAreaFilled(false);
 		option.setBorderPainted(false);
-
+		option.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        showOptionsWindow(); 
+		    }
+		});
 		about.setFocusPainted(false);
 		about.setBorder(BorderFactory.createMatteBorder(5, 0, 5, 0, new Color(97, 93, 92)));
 		about.setForeground(new Color(57,57,57));
@@ -105,6 +112,12 @@ public class MainMenu extends JFrame {
 		about.setOpaque(false);
 		about.setContentAreaFilled(false);
 		about.setBorderPainted(false);
+		about.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        showAboutWindow(); 
+		    }
+		});
 		
 		exit.setFocusPainted(false);
 		exit.setBorder(BorderFactory.createMatteBorder(5, 0, 5, 0, new Color(97, 93, 92)));
@@ -118,7 +131,7 @@ public class MainMenu extends JFrame {
 	    AudioInputStream stream;
 	    AudioFormat format;
 	    DataLine.Info info;
-	    Clip clip;
+
 		
 	    URL backgroundMusicURL = getClass().getResource("/Images/videoplayback.wav");
 	    stream = AudioSystem.getAudioInputStream(backgroundMusicURL);
@@ -199,6 +212,52 @@ public class MainMenu extends JFrame {
         setVisible(true);
 
 		show();
+	}
+	private void showAboutWindow() {
+	    JDialog aboutDialog = new JDialog(this, "About", true);
+	    aboutDialog.setLayout(new BorderLayout());
+	    aboutDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+	    String aboutText = "<html><center>Project Developed By<br><br>" +
+	                       "▨ Gharbi Safwen<br>" +
+	                       "▨ Melki Mohamed<br>" +
+	                       "▨ Chayoukhi Malek<br><br>" +
+	                       "Faculté des Sciences de Bizerte CI1 © 2023</center></html>";
+	    JLabel aboutLabel = new JLabel(aboutText, SwingConstants.CENTER);
+	    aboutLabel.setFont(new Font("Bookerly", Font.PLAIN, 16)); 
+	    aboutDialog.add(aboutLabel, BorderLayout.CENTER);
+
+
+	    aboutDialog.setSize(640, 640); 
+	    aboutDialog.setLocationRelativeTo(this); 
+
+	    aboutDialog.setVisible(true);
+	}
+	private void showOptionsWindow() {
+	    JDialog optionsDialog = new JDialog(this, "Options", true);
+	    optionsDialog.setLayout(new FlowLayout());
+	    optionsDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+	    JToggleButton musicToggleButton = new JToggleButton("Music: " + (isMusicPlaying ? "ON" : "OFF"), isMusicPlaying);
+	    musicToggleButton.addItemListener(new ItemListener() {
+	        @Override
+	        public void itemStateChanged(ItemEvent e) {
+	            if (e.getStateChange() == ItemEvent.SELECTED) {
+	                musicToggleButton.setText("Music: ON");
+	                isMusicPlaying = true;
+	                clip.start();
+	            } else {
+	                musicToggleButton.setText("Music: OFF");
+	                isMusicPlaying = false;
+	                clip.stop();
+	            }
+	        }
+	    });
+
+	    optionsDialog.add(musicToggleButton);
+
+	    optionsDialog.setSize(200, 100);
+	    optionsDialog.setLocationRelativeTo(this);
+
+	    optionsDialog.setVisible(true);
 	}
 
 	public static void main(String args[]) throws UnsupportedAudioFileException, IOException, LineUnavailableException, URISyntaxException {

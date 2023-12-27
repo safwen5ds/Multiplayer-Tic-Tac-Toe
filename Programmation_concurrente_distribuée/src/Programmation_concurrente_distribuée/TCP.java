@@ -147,7 +147,23 @@ public class Listener implements Runnable {
 		                	    String winnerText = message.substring("GAME_OUTCOME:".length());
 		                	    SwingUtilities.invokeLater(() -> {
 		                	        JOptionPane.showMessageDialog(tic.getFrame(), winnerText);
-		                	        tic.getTextfield().setText("Game Over");
+		                	        if (isServer() && winnerText.equalsIgnoreCase("Player 1 Wins!"))
+		                	        {
+		                	        	tic.getTextfield().setText("NICE WIN Player 1 !!!");
+		                	        }else  if (!isServer() && winnerText.equalsIgnoreCase("Player 2 Wins!"))
+		                	        {
+		                	        	tic.getTextfield().setText("NICE WIN Player 2 !!!");
+		                	        }else if (isServer() && winnerText.equalsIgnoreCase("It's a Draw!"))
+		                	        {
+		                	        	tic.getTextfield().setText("TIE !!!");
+		                	        }else if(!isServer() && winnerText.equalsIgnoreCase("It's a Draw!"))
+		                	        {
+		                	        	tic.getTextfield().setText("TIE !!!");
+		                	        }else
+		                	        {
+		                	        	tic.getTextfield().setText("Game Over");
+		                	        }
+		                	        
 		                	        for (JButton button : tic.getButtons()) {
 		                	            button.setEnabled(false);
 		                	        }

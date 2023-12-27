@@ -308,9 +308,12 @@ public void xWins(int a, int b, int c, int d) {
      
   
 
-  updatePointsDisplay();
+
+
+  System.out.println(" the incrementation worked !!! current match is "+currentMatch);
   currentMatch++;
   handleMatchCompletion();
+  updatePointsDisplay();
 }
 
 public void oWins(int a, int b, int c, int d) {
@@ -330,9 +333,9 @@ public void oWins(int a, int b, int c, int d) {
   
 	  System.out.println("player 1 : "+player1Points+" | Player 2 : "+player2Points);
 
-  updatePointsDisplay();
-  currentMatch++;
-  handleMatchCompletion();
+	  currentMatch++;
+	  handleMatchCompletion();
+	  updatePointsDisplay();
 
 }
 
@@ -354,9 +357,9 @@ public void draw() {
   }
   System.out.println("player 1 : "+player1Points+" | Player 2 : "+player2Points);
 
-  updatePointsDisplay();
   currentMatch++;
   handleMatchCompletion();
+  updatePointsDisplay();
 
 }
 
@@ -517,11 +520,13 @@ public void declareWinner() {
 
 
 private void updatePointsDisplay() {
+	System.out.println("update Points worked !! ");
     pointsLabel.setText("Player 1 Points: " + player1Points + ", Player 2 Points: " + player2Points);
     pointsFrame.repaint();
     if (currentMatch == doublePointsMatch)
     {
     	tcp.sendMessage("DOUBLE_START");
+    	System.out.println("Sending Double_Start is done with current match: "+currentMatch+" double match: "+doublePointsMatch);
     }
 }
 public void setDoublePointsMatch(int matchNumber) {
