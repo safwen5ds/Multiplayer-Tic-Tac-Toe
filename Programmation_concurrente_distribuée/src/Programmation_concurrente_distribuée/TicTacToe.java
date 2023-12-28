@@ -647,6 +647,7 @@ private void displayGifOverlay(String gifResourcePath) {
     gifLabel.setLocation(0, 0);
     gifLabel.setVisible(true);
     button_panel.setComponentZOrder(gifLabel, 0);
+    frame.repaint(); 
     Timer timer = new Timer(5000, new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
             button_panel.remove(gifLabel);
