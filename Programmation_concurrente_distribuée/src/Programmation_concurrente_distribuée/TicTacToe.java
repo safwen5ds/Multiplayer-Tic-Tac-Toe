@@ -35,7 +35,7 @@ public class TicTacToe implements ActionListener{
 
 
  
-    private boolean Not_valid_port(int port)
+	private boolean Not_valid_port(int port)
     {
     	return port < 1 || port > 65535;
     }
@@ -516,6 +516,55 @@ public void setPort(int port) {
 	this.port = port;
 }
 
+
+public TCP getTcp() {
+	return tcp;
+}
+public void setTcp(TCP tcp) {
+	this.tcp = tcp;
+}
+public int getPlayer1Points() {
+	return player1Points;
+}
+public void setPlayer1Points(int player1Points) {
+	this.player1Points = player1Points;
+}
+public int getPlayer2Points() {
+	return player2Points;
+}
+public void setPlayer2Points(int player2Points) {
+	this.player2Points = player2Points;
+}
+public int getCurrentMatch() {
+	return currentMatch;
+}
+public void setCurrentMatch(int currentMatch) {
+	this.currentMatch = currentMatch;
+}
+public JLabel getPointsLabel() {
+	return pointsLabel;
+}
+public void setPointsLabel(JLabel pointsLabel) {
+	this.pointsLabel = pointsLabel;
+}
+public JPanel getControlPanel() {
+	return controlPanel;
+}
+public void setControlPanel(JPanel controlPanel) {
+	this.controlPanel = controlPanel;
+}
+public JFrame getPointsFrame() {
+	return pointsFrame;
+}
+public void setPointsFrame(JFrame pointsFrame) {
+	this.pointsFrame = pointsFrame;
+}
+public int getNumberOfMatches() {
+	return numberOfMatches;
+}
+public int getDoublePointsMatch() {
+	return doublePointsMatch;
+}
 public void setNumberOfMatches(int numberOfMatches) {
     this.numberOfMatches = numberOfMatches;
 }

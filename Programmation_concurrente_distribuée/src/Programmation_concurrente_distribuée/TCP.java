@@ -1,5 +1,6 @@
 package Programmation_concurrente_distribuée;
 
+import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -7,7 +8,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 public class TCP {
@@ -59,19 +63,45 @@ public class TCP {
 	         e.printStackTrace();
 	     }
 	 }
-public void initializeServer(int port) {
-	     try {
-	    	 if (serverSocket != null && !serverSocket.isClosed()) {
-	             serverSocket.close();  
-	         }
-	         serverSocket = new ServerSocket(port);
-	         System.out.println("Server started. Waiting for a client ...");
-	         socket = serverSocket.accept();
-	         setupStreams();
-	     } catch (IOException e) {
-	         e.printStackTrace();
-	     }
-	 }
+	 public void initializeServer(int port) {
+		    final JDialog dialog = new JDialog();
+		    dialog.setModal(true); 
+		    dialog.setUndecorated(true);
+		    dialog.setTitle("Server Status");
+		    dialog.setLayout(new BorderLayout());
+
+		    JLabel label = new JLabel("Server started. Waiting for a client ...", SwingConstants.CENTER);
+		    dialog.add(label, BorderLayout.CENTER);
+
+		    JButton cancelButton = new JButton("Cancel");
+		    cancelButton.addActionListener(e -> {
+		    	closeFirewallPort();
+		        closeNetworkConnection();
+		        tic.getFrame().dispose();
+		        tic.getPointsFrame().dispose();
+		        dialog.dispose();
+		    });
+		    dialog.add(cancelButton, BorderLayout.SOUTH);
+
+		    dialog.setSize(300, 100); 
+		    dialog.setLocationRelativeTo(null); 
+
+		    new Thread(() -> {
+		        try {
+		            if (serverSocket != null && !serverSocket.isClosed()) {
+		                serverSocket.close();
+		            }
+		            serverSocket = new ServerSocket(port);
+		            SwingUtilities.invokeLater(() -> dialog.setVisible(true)); 
+		            socket = serverSocket.accept(); 
+		            SwingUtilities.invokeLater(() -> dialog.dispose()); 
+		            setupStreams();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+		    }).start();
+		}
+
 public boolean connectToServer(String ip, int port) {
 	     try {
 	    	 if (socket != null && !socket.isClosed()) {
