@@ -1,11 +1,13 @@
 package Programmation_concurrente_distribuée;
 
 import java.awt.BorderLayout;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -200,13 +202,25 @@ public class Listener implements Runnable {
 		                	    });
 		                	}
 
-		            } catch (IOException | ClassNotFoundException e) {
-		                e.printStackTrace();
-		                break;
-		            }
-		        }
-		    }
-		}
+	             } catch (SocketException e) {
+	                 SwingUtilities.invokeLater(() -> {
+	                     JOptionPane.showMessageDialog(null, "The connection to the other player was lost. Please check your network connection and try reconnecting.", "Connection Lost", JOptionPane.ERROR_MESSAGE);
+	                 });
+	                 break; 
+	             } catch (EOFException e) {
+	                 SwingUtilities.invokeLater(() -> {
+	                     JOptionPane.showMessageDialog(null, "The game was disconnected. This might be due to network issues or the other player leaving the game.", "Disconnected", JOptionPane.ERROR_MESSAGE);
+	                 });
+	                 break; 
+	             } catch (IOException | ClassNotFoundException e) {
+	                 SwingUtilities.invokeLater(() -> {
+	                     JOptionPane.showMessageDialog(null, "An unexpected error occurred. Please try restarting the game.", "Error", JOptionPane.ERROR_MESSAGE);
+	                 });
+	                 break; 
+	             }
+	         }
+	     }
+	 }
 
 public void openFirewallPort() {
     String command = "netsh advfirewall firewall add rule name=\"TicTacToePort\" dir=in action=allow protocol=TCP localport=22222";
