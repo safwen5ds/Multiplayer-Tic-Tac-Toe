@@ -161,10 +161,11 @@ public class Listener implements Runnable {
 	                	 JOptionPane.showMessageDialog(tic.getFrame(),
 	                			    "<html><body style='text-align: center;'>" +
 	                			    "<strong>⚡️ Double Points Round! ⚡️</strong><br>" +
-	                			    "<span style='color: red; font-size: 12px;'>Make it count!</span>" +
+	                			    "<strong>Make it count!</strong>" +
 	                			    "</body></html>",
 	                			    "Special Match!",
 	                			    JOptionPane.INFORMATION_MESSAGE);
+
 
 	                 }
 	                
