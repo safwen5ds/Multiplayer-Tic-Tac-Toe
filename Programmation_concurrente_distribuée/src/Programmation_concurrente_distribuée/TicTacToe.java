@@ -413,8 +413,8 @@ private void handleMatchCompletion() {
     System.out.println("handleMatchCompletion : " + currentMatch + " | " + numberOfMatches);
     tcp.sendMessage("MATCH_NUMBER:" + currentMatch);
     if (currentMatch < numberOfMatches) {
-        int nextMatchNumber = currentMatch + 1;
-        String nextMatchMessage = "NEXT IS MATCH " + nextMatchNumber + " !";
+    	int nextMatchNumber = currentMatch + 1;
+    	String nextMatchMessage = "Get Ready! 🌟 Match " + nextMatchNumber + " is up next! 🌟\n" ;
         tcp.sendMessage("NEXT_MATCH:" + nextMatchMessage);
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
