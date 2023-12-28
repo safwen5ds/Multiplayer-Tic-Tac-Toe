@@ -3,6 +3,7 @@ package Programmation_concurrente_distribuée;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -321,6 +322,13 @@ public class TicTacToe implements ActionListener{
 public void xWins(int a, int b, int c, int d) {
   highlightWinningButtons(a, b, c, d);
   textfield.setText("X wins");
+  if (tcp.isServer())
+  {
+	  displayGifOverlay("/Images/win.gif");
+  }else
+  {
+	  displayGifOverlay("/Images/lose.gif");
+  }
 
 	  if (currentMatch!=doublePointsMatch)
 	  {
@@ -348,6 +356,13 @@ public void xWins(int a, int b, int c, int d) {
 public void oWins(int a, int b, int c, int d) {
   highlightWinningButtons(a, b, c, d);
   textfield.setText("O wins");
+  if (tcp.isServer())
+  {
+	  displayGifOverlay("/Images/lose.gif");
+  }else
+  {
+	  displayGifOverlay("/Images/win.gif");
+  }
 
 
 	  if (currentMatch!=doublePointsMatch)
@@ -618,7 +633,29 @@ public void setmatchnumber(int matchNumber) {
 	this.currentMatch = matchNumber;
 	
 }
+private void displayGifOverlay(String gifResourcePath) {
+	URL gifUrl = getClass().getResource(gifResourcePath);
+    ImageIcon gifIcon = new ImageIcon(gifUrl);
+    JLabel gifLabel = new JLabel(gifIcon);
+    gifLabel.setSize(button_panel.getSize());
+    button_panel.setLayout(null);
+    button_panel.add(gifLabel);
+    gifLabel.setLocation(0, 0);
+    gifLabel.setVisible(true);
+    button_panel.setComponentZOrder(gifLabel, 0);
+    Timer timer = new Timer(5000, new ActionListener() {
+        public void actionPerformed(ActionEvent evt) {
+            button_panel.remove(gifLabel);
+            button_panel.revalidate();
+            button_panel.repaint();
+            button_panel.setLayout(new GridLayout(4, 4)); 
+        }
+    });
+    timer.setRepeats(false);
+    timer.start();
+}
 
 
 }
+
 
