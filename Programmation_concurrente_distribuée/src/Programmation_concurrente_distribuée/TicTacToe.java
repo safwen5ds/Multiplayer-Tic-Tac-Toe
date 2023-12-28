@@ -635,6 +635,10 @@ public void setmatchnumber(int matchNumber) {
 }
 private void displayGifOverlay(String gifResourcePath) {
 	URL gifUrl = getClass().getResource(gifResourcePath);
+	if (gifUrl == null) {
+        System.out.println("Resource not found: " + gifResourcePath);
+        return;
+    }
     ImageIcon gifIcon = new ImageIcon(gifUrl);
     JLabel gifLabel = new JLabel(gifIcon);
     gifLabel.setSize(button_panel.getSize());
