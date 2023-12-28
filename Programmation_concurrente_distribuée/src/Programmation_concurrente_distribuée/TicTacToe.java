@@ -415,7 +415,7 @@ private void handleMatchCompletion() {
     if (currentMatch < numberOfMatches) {
     	int nextMatchNumber = currentMatch + 1;
     	String nextMatchMessage = "<html><body style='text-align: center;'>" +
-                "<strong>Get Ready! 🌟 Match " + nextMatchNumber + " is up next! 🌟</strong>" +
+                "<strong>Get Ready! 🔥 Match " + nextMatchNumber + " is up next! 🔥</strong>" +
                 "</body></html>";
         tcp.sendMessage("NEXT_MATCH:" + nextMatchMessage);
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -646,7 +646,7 @@ private void displayGifOverlay(String gifResourcePath) {
     gifLabel.setSize(button_panel.getSize());
     button_panel.setLayout(null);
     button_panel.add(gifLabel);
-    gifLabel.setLocation(0, 0);
+    gifLabel.setLocation(0, 200);
     gifLabel.setVisible(true);
     button_panel.setComponentZOrder(gifLabel, 0);
     frame.repaint(); 
