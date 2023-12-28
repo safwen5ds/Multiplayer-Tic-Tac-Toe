@@ -172,13 +172,15 @@ public class MainMenu extends JFrame {
 			}
 		};
 
-	    exit.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-				dispose();
-				clip.stop();  
-            }
-        });
+		exit.addActionListener(new java.awt.event.ActionListener() {
+		    @Override
+		    public void actionPerformed(java.awt.event.ActionEvent evt) {
+		        dispose();
+		        clip.stop();
+		        System.exit(0);  
+		    }
+		});
+
 	    
 		secondPanel.add(Box.createVerticalStrut(1));
 		JLabel label = new JLabel("<html><center>TIC-TAC-TOE<br>GAME</center></html>", SwingConstants.CENTER);

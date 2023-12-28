@@ -62,31 +62,38 @@ public class TicTacToe implements ActionListener{
     		        mainMenu.setVisible(true); 
     		    }
     		});
+         SwingUtilities.invokeLater(() -> mainMenu.setVisible(false));
 
+    	 ip = JOptionPane.showInputDialog(frame, "Enter IP Address:", "localhost");
+    	 if (ip == null) {
+    		SwingUtilities.invokeLater(() -> mainMenu.setVisible(true));
+    	    return; 
+    	 }
 
-    	 String ipInput = JOptionPane.showInputDialog(frame, "Enter IP Address:", "localhost");
-    	    String portInput = JOptionPane.showInputDialog(frame, "Enter Port:", "22222");
+    	 try {
+    	     port = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter Port:", "22222"));
+    	 } catch (NumberFormatException e) {
+    		 SwingUtilities.invokeLater(() -> mainMenu.setVisible(true));
+    		 return;
+    	 }
 
-    	    while (!valid_ip(ipInput)) {
-    	        ipInput = JOptionPane.showInputDialog(frame, "Enter valid IP Address:", "localhost");
-    	    }
-    	    this.ip = ipInput;
-    	    
-    	    while (true) {
-    	        try {
-    	            if (portInput != null && !portInput.trim().isEmpty()) {
-    	                int parsedPort = Integer.parseInt(portInput);
-    	                if (!Not_valid_port(parsedPort)) {
-    	                    this.port = parsedPort;
-    	                    break;
-    	                }
-    	            }
-    	            portInput = JOptionPane.showInputDialog(frame, "Invalid port. Enter Port:", "22222");
-    	        } catch (NumberFormatException e) {
-    	            JOptionPane.showMessageDialog(frame, "Invalid input for port. Please enter a number.");
-    	            portInput = JOptionPane.showInputDialog(frame, "Enter Port:", "22222");
-    	        }
-    	    }
+    	 while (!valid_ip(ip)) {
+    	     ip = JOptionPane.showInputDialog(frame, "Enter IP Address:", "localhost");
+    	     if (ip == null) {    	 
+    	    	 SwingUtilities.invokeLater(() -> mainMenu.setVisible(true));
+    	    	 return;
+    	     }
+    	 }
+
+    	 while (Not_valid_port(port)) {
+    	     try {
+    	         port = Integer.parseInt(JOptionPane.showInputDialog(frame, "Invalid port. Enter Port:", "22222"));
+    	     } catch (NumberFormatException e) {
+    	    	 SwingUtilities.invokeLater(() -> mainMenu.setVisible(true));
+    	    	 return;
+    	     }
+    	 }
+
         frame.setSize(800, 800);
         frame.getContentPane().setBackground(new Color(50, 50, 50));
         frame.setLayout(new BorderLayout());
@@ -146,6 +153,14 @@ public class TicTacToe implements ActionListener{
        if (tcp.isServer())
        {
     	   String matchesInput = JOptionPane.showInputDialog(frame, "Enter Number of Matches:", "5");
+    	   if (matchesInput == null) {  
+    		 tcp.closeFirewallPort();
+		     tcp.closeNetworkConnection();
+		     frame.dispose();
+		     pointsFrame.dispose();
+  	    	 SwingUtilities.invokeLater(() -> mainMenu.setVisible(true));
+  	    	 return;
+  	     }
            numberOfMatches = Integer.parseInt(matchesInput);
            tcp.sendNumberOfMatches(numberOfMatches );
        }
