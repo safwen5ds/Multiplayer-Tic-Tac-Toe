@@ -297,6 +297,9 @@ public void closeNetworkConnection() {
         if (isServer && serverSocket != null) {
             serverSocket.close();
             serverSocket = null;
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(null, "Server has stopped.", "Server Notification", JOptionPane.INFORMATION_MESSAGE);
+            });
         }
     } catch (IOException e) {
         e.printStackTrace();
