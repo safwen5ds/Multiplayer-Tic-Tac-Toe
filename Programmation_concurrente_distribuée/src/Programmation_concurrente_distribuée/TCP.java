@@ -158,10 +158,14 @@ public class Listener implements Runnable {
 	                 
 	                 if (message.startsWith("DOUBLE_START"))
 	                 {
-	                	 JOptionPane.showMessageDialog(tic.getFrame(), 
-	                			    "⚡️ Double Points Round! Make it count! ⚡️", 
-	                			    "Special Match!", 
+	                	 JOptionPane.showMessageDialog(tic.getFrame(),
+	                			    "<html><body style='text-align: center;'>" +
+	                			    "<strong>⚡️ Double Points Round! ⚡️</strong><br>" +
+	                			    "<span style='color: red; font-size: 12px;'>Make it count!</span>" +
+	                			    "</body></html>",
+	                			    "Special Match!",
 	                			    JOptionPane.INFORMATION_MESSAGE);
+
 	                 }
 	                
 		                if (message.startsWith("MOVE:")) {

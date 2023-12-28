@@ -414,7 +414,9 @@ private void handleMatchCompletion() {
     tcp.sendMessage("MATCH_NUMBER:" + currentMatch);
     if (currentMatch < numberOfMatches) {
     	int nextMatchNumber = currentMatch + 1;
-    	String nextMatchMessage = "Get Ready! 🌟 Match " + nextMatchNumber + " is up next! 🌟\n" ;
+    	String nextMatchMessage = "<html><body style='text-align: center;'>" +
+                "<strong>Get Ready! 🌟 Match " + nextMatchNumber + " is up next! 🌟</strong>" +
+                "</body></html>";
         tcp.sendMessage("NEXT_MATCH:" + nextMatchMessage);
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
