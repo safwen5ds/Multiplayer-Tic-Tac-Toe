@@ -324,18 +324,7 @@ public void closeNetworkConnection() {
         e.printStackTrace();
     }
 }
-public void restartNetwork() {
-    closeNetworkConnection();  
 
-
-    try {
-        Thread.sleep(1000);
-    } catch (InterruptedException e) {
-        e.printStackTrace();
-    }
-
-    starting();
-}
 public void sendDoublePointsMatch(int matchNumber) {
     try {
         oos.writeObject("DOUBLE_POINTS_MATCH:" + matchNumber);
