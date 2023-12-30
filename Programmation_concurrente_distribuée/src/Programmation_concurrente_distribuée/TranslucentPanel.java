@@ -4,7 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TranslucentPanel extends JPanel {
-    public TranslucentPanel() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1931200209846943678L;
+
+	public TranslucentPanel() {
         setOpaque(false);
     }
 
