@@ -231,13 +231,16 @@ public class Listener implements Runnable {
 	 }
 
 public void openFirewallPort() {
-    String command = "netsh advfirewall firewall add rule name=\"TicTacToePort\" dir=in action=allow protocol=TCP localport=22222";
-    executeCommand(command, "Firewall port 22222 opened successfully.", "Failed to open port on firewall.");
+	int port = tic.getPort();
+    String command = "netsh advfirewall firewall add rule name=\"TicTacToePort\" dir=in action=allow protocol=TCP localport=" + port;
+    executeCommand(command, "Firewall port " + port + " opened successfully.", "Failed to open port on firewall.");
 }
 
+
 public void closeFirewallPort() {
-    String command = "netsh advfirewall firewall delete rule name=\"TicTacToePort\" protocol=TCP localport=22222";
-    executeCommand(command, "Firewall port 22222 closed successfully.", "Failed to close port on firewall.");
+	int port = tic.getPort(); 
+    String command = "netsh advfirewall firewall delete rule name=\"TicTacToePort\" protocol=TCP localport=" + port;
+    executeCommand(command, "Firewall port " + port + " closed successfully.", "Failed to close port on firewall.");
 }
 
 public void executeCommand(String command, String successMessage, String errorMessage) {
