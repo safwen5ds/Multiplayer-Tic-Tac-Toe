@@ -8,7 +8,7 @@ public class TranslucentPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1931200209846943678L;
-
+    //abc
 	public TranslucentPanel() {
         setOpaque(false);
     }
