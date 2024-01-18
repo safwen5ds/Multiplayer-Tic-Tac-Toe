@@ -1,4 +1,4 @@
-package Programmation_concurrente_distribuée;
+package Programmation_concurrente_distribuée.View;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFormat;

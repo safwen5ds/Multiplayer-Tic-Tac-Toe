@@ -1,4 +1,4 @@
-package Programmation_concurrente_distribuée;
+package Programmation_concurrente_distribuée.Controller;
 
 import java.awt.BorderLayout;
 import java.io.EOFException;
@@ -15,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+
+import Programmation_concurrente_distribuée.View.TicTacToe;
 
 public class TCP {
     private Socket socket;

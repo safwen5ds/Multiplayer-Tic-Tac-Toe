@@ -1,4 +1,4 @@
-package Programmation_concurrente_distribuée;
+package Programmation_concurrente_distribuée.View;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package Programmation_concurrente_distribuée;
+package Programmation_concurrente_distribuée.View;
 
 
 import java.awt.*;
@@ -12,6 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.*;
+
+import Programmation_concurrente_distribuée.Controller.TCP;
 //abc
 public class TicTacToe implements ActionListener{
 	private JFrame frame = new JFrame();
